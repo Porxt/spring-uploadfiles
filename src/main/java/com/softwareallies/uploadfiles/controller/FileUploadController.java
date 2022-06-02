@@ -1,6 +1,7 @@
 package com.softwareallies.uploadfiles.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
@@ -59,10 +60,20 @@ public class FileUploadController {
             ).body(file);
     }
 
-    @PostMapping
+    @PostMapping("/one")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+        
+        return "redirect:/";
+    }
+
+    @PostMapping("/multiple")
+    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, RedirectAttributes redirectAttributes) {
+        files.forEach(file -> storageService.store(file));
+        redirectAttributes.addFlashAttribute(
+            "message",
+            "You successfully uploaded " + files.size() + " files!");
         
         return "redirect:/";
     }

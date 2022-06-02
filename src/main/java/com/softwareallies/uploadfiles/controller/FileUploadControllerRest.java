@@ -39,7 +39,7 @@ public class FileUploadControllerRest {
         return uploadedFiles;
     }
 
-    @PostMapping
+    @PostMapping("/one")
     public File uploadFile(@RequestParam("file") MultipartFile file) {
         String uri;
 
@@ -52,5 +52,23 @@ public class FileUploadControllerRest {
         ).build().toUri().toString();
 
         return new File(file.getOriginalFilename(), uri);
+    }
+
+    @PostMapping("/multiple")
+    public List<File> uploadFile(@RequestParam("files") List<MultipartFile> files) {
+        return files.stream().map(file -> {
+            String uri;
+
+            storageService.store(file);
+
+            uri = MvcUriComponentsBuilder.fromMethodName(
+                FileUploadController.class,
+                "serveFile",
+                file.getOriginalFilename()
+            ).build().toUri().toString();
+
+            return new File(file.getOriginalFilename(), uri);
+        })
+        .collect(Collectors.toList());
     }
 }
