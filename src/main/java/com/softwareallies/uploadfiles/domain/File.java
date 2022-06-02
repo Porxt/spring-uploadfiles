@@ -11,5 +11,5 @@ public class File {
 
     @JsonProperty("file_name")
     private String fileName;
-    private String uri;
+    private String url;
 }
