@@ -1,0 +1,27 @@
+package com.softwareallies.uploadfiles;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+import com.softwareallies.uploadfiles.storage.StorageProperties;
+import com.softwareallies.uploadfiles.storage.StorageService;
+
+@SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
+public class UploadfilesApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(UploadfilesApplication.class, args);
+	}
+
+	@Bean
+	CommandLineRunner init(StorageService storageService) {
+		return args -> {
+			storageService.deleteAll();
+			storageService.init();
+		};
+	}
+}
